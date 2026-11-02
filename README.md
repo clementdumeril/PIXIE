@@ -120,3 +120,7 @@ python scripts/eval_defects.py <dataset>/dataset out/board_both.csv out/tune/def
 
 PIXIE method and dataset: Carl Zeiss AG (dataset under BSD-3-Clause; the images in `docs/` come from it). SuperPoint:
 Magic Leap (its weights carry a non-commercial licence). LightGlue: ETH Zurich CVG. MINIMA weights: their authors.
+
+## License
+
+Code: MIT (see `LICENSE`). Dataset images and third-party weights keep their own licences, listed above.
