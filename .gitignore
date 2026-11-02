@@ -1,0 +1,6 @@
+out/
+__pycache__/
+# machine-specific launch scripts (private host and paths)
+sync.sh
+scripts/*.cmd
+docs/post_linkedin.md
