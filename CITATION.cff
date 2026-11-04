@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this reimplementation, please cite the original PIXIE paper (see references) and this repository."
+title: "PIXIE reimplemented: zero-shot 6D pose from one RGB photo, plus a per-part assembly check"
+authors:
+  - family-names: "Dumeril"
+    given-names: "Clément"
+    affiliation: "University of California, Berkeley"
+license: MIT
+repository-code: "https://github.com/clementdumeril/PIXIE"
+type: software
+references:
+  - type: article
+    title: "PIXIE: A Zero-Shot texture-invariant 6D pose estimation framework for unseen objects with assembly defects"
+    authors:
+      - family-names: "Jungemeyer"
+        given-names: "Leon"
+      - family-names: "Magaña"
+        given-names: "Alejandro"
+      - family-names: "Mohan"
+        given-names: "Gautham"
+      - family-names: "Karl"
+        given-names: "Matthias"
+      - family-names: "Werdehausen"
+        given-names: "Daniel"
+    year: 2026
+    identifiers:
+      - type: other
+        value: "arXiv:2607.16015"
+    url: "https://arxiv.org/abs/2607.16015"
