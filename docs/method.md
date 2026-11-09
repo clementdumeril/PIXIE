@@ -33,21 +33,23 @@ The paper assumes the 2D detection is given. Here it comes from the scene, with 
 The dataset is test-only.
 
 - At inference: only the fully assembled target model, the camera calibration, the photo and the board marker size. The `modelN_poses.json` entry that places the object on the board is ground truth and is never read.
-- Ground-truth poses and as-built meshes are used for scoring only. The `--box oracle` and `--gt-pose` options exist for analysis and are labelled as such in the README.
+- Ground-truth poses and as-built meshes are used for scoring only. The `--box oracle` and `--gt-pose` options exist for analysis and are labelled as such in [`RESULTS.md`](RESULTS.md).
 - No training or tuning on the dataset. The pose configuration (normal + depth references, matcher, RANSAC settings, coarse stage) was fixed before the full runs; a 12-image and a 24-image run served only to check that the code ran, and nothing was changed after them.
 - External pretrained weights: SuperPoint and LightGlue/MINIMA, trained on other data; nothing is trained here.
 - Defect labels (`missing()` in [`pixie/parts.py`](../pixie/parts.py), inspected with [`scripts/defect_labels.py`](../scripts/defect_labels.py)): the target parts with no identical part (same vertices) in the scene's as-built mesh. Extra bricks have no part-level label, so the part AUROC only measures missing parts.
 
-## Results in more detail
+## Code layout
 
-Pose without ground truth, ADD < 1 cm per scenario: color 96.2 %, clutter 88.8 %, assembly mistake 92.0 %, assembly mistake with clutter 75.3 %. The gap to the oracle crop (0.29 cm, 94.4 % < 1 cm) is almost entirely gross failures (rotation more than 90 deg off), mostly in cluttered scenes. 4 images get no pose. When the pose is right, it lines up with the photo to about 2 px (median reprojection error in the 512 px crop, [`scripts/reproj.py`](../scripts/reproj.py)).
+| Path | Role |
+| :-- | :-- |
+| [`pixie/render.py`](../pixie/render.py) | GPU rasteriser: depth, normals, model-frame points, face ids |
+| [`pixie/references.py`](../pixie/references.py), [`matching.py`](../pixie/matching.py), [`pose.py`](../pixie/pose.py) | Reference set, SuperPoint + LightGlue, PnP and view re-selection |
+| [`pixie/detect.py`](../pixie/detect.py) | Work area from the ArUco board |
+| [`pixie/parts.py`](../pixie/parts.py), [`defects.py`](../pixie/defects.py), [`synth.py`](../pixie/synth.py) | CAD parts, edge confirmation, synthetic defects |
+| [`scripts/`](../scripts/) | Evaluation, tuning, reports, figure |
 
-![Scene scores of the assembly check, one point per scene, by scene type](scene_scores.svg)
+## Results and figures
 
-*Per-scene scores from [`defect_scenes.csv`](defect_scenes.csv), plotted by [`scripts/make_fig_scene_scores.py`](../scripts/make_fig_scene_scores.py) (no dataset or GPU needed; prints scene AUROC 0.920). The two high correct scenes are `clutter2` of models 2 and 4.*
-
-Pose error costs only a few points of AUROC. The main false positives are those two `clutter2` scenes, where the coarse pose failed: when nothing lines up, the check calls the scene defective. A pose-confidence gate would likely fix this, but it was not added after seeing these numbers. The check was tuned on synthetic defects only (part AUROC 0.94, image AUROC 0.83 there): images transfer well, part localisation loses ground on real photos.
-
-Only the per-scene CSV is committed. The per-image pose and check outputs (`out/board_both.csv`, `out/defects_board/`) are produced by the commands in the README but are not in the repository.
+Tables, per-scenario numbers and the scene-score plot: [`RESULTS.md`](RESULTS.md).
 
 The check images in `docs/` come from `scripts/eval_defects.py` (renamed). The overview figure is hand-written SVG ([`figures/overview.svg`](figures/overview.svg)) with crops of `check_missing_model4.jpg`.

@@ -33,11 +33,12 @@ N_BINS = 8            # edge orientation bins over 180 deg
 
 @dataclass
 class Params:
-    """Tuned on synthetic defects only (scripts/tune_defects.py), then frozen."""
-    tol_px: int = 3          # search radius for a confirming photo edge
-    norm_q: float = 75.0     # percentile of edge responses that counts as full confirmation
-    min_edge: int = 15       # edge pixels for a part to be scored
-    region_mm: float = 12.0  # pooling radius
+    """Tuned on synthetic defects only (scripts/tune_defects.py), then frozen; the defaults are the
+    frozen values (docs/method.md)."""
+    tol_px: int = 2          # search radius for a confirming photo edge
+    norm_q: float = 50.0     # percentile of edge responses that counts as full confirmation
+    min_edge: int = 20       # edge pixels for a part to be scored
+    region_mm: float = 0.0   # pooling radius (0 = each part on its own)
 
     @staticmethod
     def load(path: Path) -> "Params":
